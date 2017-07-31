@@ -87,7 +87,7 @@ include("includes/head.php");
 ?>
 <body>
     <?php 
-        include("nav.php");
+        include("includes/nav.php");
         ?>
     
     <div class="container">

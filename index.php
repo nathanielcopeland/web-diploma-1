@@ -13,7 +13,7 @@ $_SESSION["favcolor"] = "green";
     <body>
         
         <?php 
-        include("nav.php");
+        include("includes/nav.php");
         ?>
         
         

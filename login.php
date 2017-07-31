@@ -7,15 +7,20 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   //get database connection
   include("includes/database.php");
   
-  $email = $_POST["email"];
-  $password = $_POST['password'];
+  $user_email = $_POST["user"];
   
-  //construct query with email variable
-  $query = "SELECT * FROM accounts WHERE email='$email'";
+  
+  if(filter_var($user_email,FILTER_VALIDATE_EMAIL)){
+      //if true, user entered an email 
+      $query = "SELECT * FROM accounts WHERE email='$user_email'";
+  } else {
+      //if false, user entered a username
+      $query = "SELECT * FROM accounts WHERE username='$user_email'";
+  }
+  $password = $_POST['password'];
   
   //create array to store errors
   $errors = array();
-  
   //run query
   $userdata = $connection->query($query);
   
@@ -50,15 +55,15 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     include("includes/head.php");
     ?>
     <body>
-        <?php include("nav.php")?>
+        <?php include("includes/nav.php")?>
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
                     <form id="login-form" action="login.php" method="post">
                         <h1>Login to your account</h1>
                         <div class="form-goup">
-                            <label for="email">Email Address</label>
-                            <input class ="form-control" type="email" id="email" name="email" placeholder="you@email.com">
+                            <label for="email">Email Address or Username</label>
+                            <input class ="form-control" type="text" id="user" name="user" placeholder="you@email.com">
                         </div>
                         <div class="form-group">
                             <label  for="password">Your Password</label>
