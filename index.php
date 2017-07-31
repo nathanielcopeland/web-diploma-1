@@ -34,21 +34,6 @@ Your bones don't break, mine do. That's clear. Your cells react to bacteria and 
             
             </div>
         </div>
-        
-        
-        
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-
-                    <h3>Login</h3>
-                    <form method="POST" action="account_login.php">
-                        <input type="text" name="username" placeholder="username"/> <br/><br/>
-                        <input type="password" name="password" placeholder="password"/> <br/><br/>
-                        <input type="submit" name="submit" value="Submit!"/>
-                    </form>
-            </div>
-        </div>
     </body>
     
     <footer>
