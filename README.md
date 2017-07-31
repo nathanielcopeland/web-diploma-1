@@ -1,3 +1,10 @@
 # Learning PHP concepts
 
-This is a project about learning PHP and MySQL. Feel free to check it out.
+______ _   _ ______ 
+| ___ \ | | || ___ \
+| |_/ / |_| || |_/ /
+|  __/|  _  ||  __/ 
+| |   | | | || |    
+\_|   \_| |_/\_|
+
+This is a project about learning PHP and MySQL.
