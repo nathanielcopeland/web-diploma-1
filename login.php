@@ -39,7 +39,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     else{
       
       $message = "You have been logged in";
-      $_SESSION["id"] = $id;
+      $username = $user["username"];
+      $_SESSION['username'] = $username;
+      $email = $user["email"];
+      $_SESSION['email'] = $email;
     }
   }
   else{
