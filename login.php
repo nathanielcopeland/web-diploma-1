@@ -7,7 +7,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   //get database connection
   include("includes/database.php");
   
-  $user_email = $_POST["user"];
+  $user_email = $_POST['user'];
   
   
   if(filter_var($user_email,FILTER_VALIDATE_EMAIL)){
@@ -17,8 +17,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
       //if false, user entered a username
       $query = "SELECT * FROM accounts WHERE username='$user_email'";
   }
-  $password = $_POST['password'];
-  
+  $pass = $_POST['password'];
   //create array to store errors
   $errors = array();
   //run query
@@ -29,14 +28,18 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   if($userdata->num_rows > 0){
     $user = $userdata->fetch_assoc();
     
-    $id = $user['id'];
     $db_password = $user['password'];
-    if(password_verify($password,$db_password)){
-      $message = "You have been logged in";
-      $_SESSION["id"] = $id;
+    
+    
+    
+    if(password_verify($pass,$user['password'])===false){
+      $errors["account"] = "incorrect password or email";
+      
     }
     else{
-      $errors["account"] = "incorrect password or email";
+      
+      $message = "You have been logged in";
+      $_SESSION["id"] = $id;
     }
   }
   else{
@@ -55,7 +58,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     include("includes/head.php");
     ?>
     <body>
-        <?php include("includes/nav.php")?>
+        <?php include("includes/navigation.php")?>
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
@@ -69,6 +72,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                             <label  for="password">Your Password</label>
                             <input class ="form-control" type="password" id="pasword" name="password" placeholder="your password">
                         </div>
+                        <p>Dont have an account?<a href="register.php"> Register Here</a></p>
+                        
                        <div class="text-center">
                            <button type="submit" name="submit" value="login" class="btn btn-info">Login</button>
                        </div>

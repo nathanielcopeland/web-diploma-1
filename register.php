@@ -40,7 +40,7 @@ if($password1 !== $password2){
 if(count($errors) == 0){
     //hash the password
     echo $password;
-    $password = password_hash($password,PASSWORD_DEFAULT);
+    $password = password_hash($password1,PASSWORD_DEFAULT);
     echo $password;
     //create a query string
     $query = "INSERT 
@@ -51,7 +51,7 @@ if(count($errors) == 0){
                       
 $result = $connection->query($query);
 if($result == true){
-    echo "account created";
+    $message = "Account successfully created";
 } else {
     if($connection->errno == 1062){
         $message = $connection->error;
@@ -87,7 +87,7 @@ include("includes/head.php");
 ?>
 <body>
     <?php 
-        include("includes/nav.php");
+        include("includes/navigation.php");
         ?>
     
     <div class="container">
@@ -144,10 +144,16 @@ include("includes/head.php");
                             ?>
                         </span>
                     </div>
-                    
+                    <p>Have an account?<a href="login.php"> Sign In</a></p>
                     <div class="text-center">
                         <button type="submit" class="btn btn-default">Register</button>
                     </div>
+                    <?php
+                    if($message){
+                        echo "<div class=\"alert alert-success\">$message</div>";
+                    }
+                    ?>
+                    
                 </form>
             </div>
         </div>
