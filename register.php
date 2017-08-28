@@ -20,7 +20,6 @@ if(strlen($username) < 3){
      $errors["username"] = trim($errors["username"]);
  }
      
-
 $email = $_POST["email"];
 //check and validate email
 $email_check = filter_var($email,FILTER_VALIDATE_EMAIL);
@@ -39,19 +38,30 @@ if($password1 !== $password2){
 //if no errors write data to database
 if(count($errors) == 0){
     //hash the password
-    echo $password;
     $password = password_hash($password1,PASSWORD_DEFAULT);
-    echo $password;
     //create a query string
-    $query = "INSERT 
-                      INTO accounts 
-                      (username,email,password,status,created) 
-                      VALUES
-                      ('$username','$email','$password','1',NOW())";
+    // $query = "INSERT 
+    //                   INTO accounts 
+    //                   (username,email,password,status,created) 
+    //                   VALUES
+    //                   ('$username','$email','$password','1',NOW())";
+        $query = "INSERT
+                  INTO accounts
+                  (username,email,password,status,created,user_rank)
+                    VALUES
+                    (?,?,?,1,NOW()),1";
+        $statement = $connection->prepare($query);
+        $statement->bind_param("sss",$username,$email,$password);
+        
+        
+        //$result = $connection->query($query);
+        $statement->execute();
+        //$result = $statement->get_result();
                       
-$result = $connection->query($query);
-if($result == true){
+
+if($statement->affected_rows > 0){
     $message = "Account successfully created";
+    $errormessage = "Account creation failed";
 } else {
     if($connection->errno == 1062){
         $message = $connection->error;

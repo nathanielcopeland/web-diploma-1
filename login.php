@@ -12,22 +12,31 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   
   if(filter_var($user_email,FILTER_VALIDATE_EMAIL)){
       //if true, user entered an email 
-      $query = "SELECT * FROM accounts WHERE email='$user_email'";
+        $query = "SELECT * FROM accounts WHERE email=?";
   } else {
       //if false, user entered a username
-      $query = "SELECT * FROM accounts WHERE username='$user_email'";
+      $query = "SELECT * FROM accounts WHERE username=?";
+      
+        
+        
   }
   $pass = $_POST['password'];
   //create array to store errors
   $errors = array();
-  //run query
-  $userdata = $connection->query($query);
   
+  //run query
+  $statement = $connection->prepare($query);
+  $statement->bind_param("s",$user_email);
+  $statement->execute();
+  //get the result of the query
+  $userdata = $statement->get_result();
+  
+  //$userdata = $connection->query($query);
   
   //check the result
   if($userdata->num_rows > 0){
     $user = $userdata->fetch_assoc();
-    
+  //print_r($user);  
     $db_password = $user['password'];
     
     
@@ -43,6 +52,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
       $_SESSION['username'] = $username;
       $email = $user["email"];
       $_SESSION['email'] = $email;
+      $rank = $user['user_rank'];
+      $_SESSION['rank'] = $rank;
+      $id = $user["id"];
+      $_SESSION['id'] = $id;
     }
   }
   else{

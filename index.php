@@ -2,7 +2,27 @@
 session_start();
 include("includes/database.php");
 
-$_SESSION["favcolor"] = "green";
+
+$product_query = "SELECT 
+products.id,
+products.name,
+products.description,
+products.price,
+images.image_file
+FROM products 
+INNER JOIN products_images 
+ON products.id=products_images.product_id
+INNER JOIN images
+ON images.image_id = products_images.image_id";
+$product_statement = $connection->prepare($product_query);
+$product_statement->execute();
+$result = $product_statement->get_result();
+
+
+$cat_query = "SELECT category_id,category_name FROM categories";
+$cat_statement = $connection->prepare($cat_query);
+$cat_statement->execute();
+$cat_result = $cat_statement->get_result();
 ?>
 <!doctype html>
 <html>
@@ -19,19 +39,61 @@ $_SESSION["favcolor"] = "green";
         
         <div class="container">
             <div class="row">
-            
-            <div class="col-sm-6 col-md-6">
-            <h1>Title 1 <i class="fa fa-battery-full" aria-hidden="true"></i></h1>
-Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows. Some pilots get picked and become television programs. Some don't, become nothing. She starred in one of the ones that became nothing.
-
-            </div>    
-            
-            <div class="col-sm-6 col-md-6">
-<h1>Title 2 <i class="fa fa-battery-quarter" aria-hidden="true"></i></h1>
-
-
-Your bones don't break, mine do. That's clear. Your cells react to bacteria and viruses differently than mine. You don't get sick, I do. That's also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We're on the same curve, just on opposite ends.          </div> 
-            
+                <div class="col-md-2">
+                    <h3>Categories</h3>
+                    <nav>
+                        <ul class="nav nav-stacked nav-pills">
+                        <?php
+                        $cat_selected = 1;
+                        if($cat_result->num_rows > 0){
+                            while($cat_row = $cat_result->fetch_assoc()){
+                            $cat_id = $cat_row['category_id'];
+                            $cat_name = $cat_row['category_name'];
+                            if($cat_selected==$cat_id){
+                                $active = "class='active'";
+                            } else {
+                                $active = "";
+                            }
+                            echo "<li $active data-id='$cat_id'>
+                            <a href='index.php?category=$cat_id'>$cat_name</a>
+                            </li>";
+                        }
+                        }
+                        ?>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <?php
+                        if($result->num_rows > 0){
+                            $counter = 0;
+                            while($row = $result->fetch_assoc()){
+                                $counter++;
+                                if($counter == 1){
+                                    echo "<div class='row'>";
+                                }
+                                
+                                $name = $row['name'];
+                                $id = $row['id'];
+                                $description = $row['description'];
+                                $price = $row['price'];
+                                $image = $row['image_file'];
+                                echo "<div class='col-md-3'>
+                                <img class='img-responsive' src='products/$image'>
+                                <h3>$name</h3>
+                                <h4>$price</h4>
+                                <p>$description</p>
+                                </div>";
+                                
+                                if($counter % 4 === 0 ){
+                                    echo "</div>";
+                                }
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
